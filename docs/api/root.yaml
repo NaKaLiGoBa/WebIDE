@@ -1,0 +1,18 @@
+openapi: 3.0.3
+info:
+  title: Web IDE
+  description: Web IDE
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/api'
+paths:
+  /v1/file:
+    $ref: './file/save.yaml'
+  /v1/file/{id}/run:
+    $ref: './file/run.yaml'
+  /v1/file/{id}:
+    $ref: './file/get.yaml'
+  /v1/auth/signin:
+    $ref: './auth/signin.yaml'
+  /v1/auth/signup:
+    $ref: './auth/signup.yaml'
