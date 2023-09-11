@@ -1,0 +1,17 @@
+get:
+  summary: 파일 실행
+  description: 서버에 저장되어 있는 파일 실행
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: 파일 아이디
+  responses:
+    '200':
+      description: 파일 실행 결과
+      content:
+        application/json:
+          schema:
+            $ref: './components.yaml/#/components/schemas/RunResult'
