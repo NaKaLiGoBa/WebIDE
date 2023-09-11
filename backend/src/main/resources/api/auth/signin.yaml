@@ -5,14 +5,25 @@ post:
     content:
       application/json:
         schema:
-          $ref: './components.yaml/#/components/schemas/AuthRequest'
+          type: object
+          properties:
+            email:
+              type: string
+              description: 이메일
+            password:
+              type: string
+              description: 비밀번호
   responses:
     '200':
       description: 로그인 성공
       content:
         application/json:
           schema:
-            $ref: './components.yaml/#/components/schemas/AuthToken'
+            type: object
+            properties:
+              access-token:
+                type: string
+                description: 인증 토큰
     '401':
       description: 로그인 실패
 
