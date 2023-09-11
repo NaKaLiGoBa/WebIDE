@@ -1,0 +1,18 @@
+post:
+  summary: 회원가입
+  description: 이메일, 비밀번호로 회원가입
+  requestBody:
+    content:
+      application/json:
+        schema:
+          $ref: './components.yaml/#/components/schemas/AuthRequest'
+  responses:
+    '200':
+      description: 회원가입 성공
+      content:
+        application/json:
+          schema:
+            $ref: './components.yaml/#/components/schemas/AuthToken'
+    '401':
+      description: 회원가입 실패
+  

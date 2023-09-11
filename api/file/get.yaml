@@ -1,0 +1,17 @@
+get:
+  summary: 파일 불러오기
+  description: 파일 아이디로 파일 불러오기
+  parameters:
+    - in: path
+      name: id
+      schema:
+        type: integer
+      required: true
+      description: 파일 아이디
+  responses:
+    '200':
+      description: 파일 불러오기 성공
+      content:
+        application/json:
+          schema:
+            $ref: './components.yaml/#/components/schemas/LoadedFile'
