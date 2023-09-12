@@ -14,4 +14,8 @@ get:
       content:
         application/json:
           schema:
-            $ref: './components.yaml/#/components/schemas/RunResult'
+            type: object
+            properties:
+              result:
+                type: string
+                description: 실행 결과
