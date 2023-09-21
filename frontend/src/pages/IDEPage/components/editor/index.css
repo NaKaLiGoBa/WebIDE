@@ -24,6 +24,7 @@ ul#north_tab.nav_tabs {
 #north_tab > li > a:hover {
   background-color: #2c3243;
   opacity: 0.5;
+  border-radius: 16px;
 }
 
 #north_tab #north_tab_close_btn {
@@ -35,6 +36,7 @@ ul#north_tab.nav_tabs {
 }
 
 #north_tab > li {
-    border-right: solid 1px;
+    border: solid 2px #2c3243;
     cursor: pointer;
+    border-radius: 16px;
   }

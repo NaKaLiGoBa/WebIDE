@@ -3,8 +3,8 @@ import Tab from "./components/Tab";
 import "./index.css";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState("file1");
-  const [tabs, setTabs] = useState(["file1", "file2", "file3"]);
+  const [activeTab, setActiveTab] = useState("Main.java");
+  const [tabs, setTabs] = useState(["Main.java", "index.jsx", "index.css"]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);

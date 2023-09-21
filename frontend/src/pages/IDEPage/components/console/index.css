@@ -88,13 +88,3 @@ ul#south_tab.nav_tabs {
   outline: none;
   box-shadow: none;
 }
-
-.nav_tabs {
-  border-bottom: 0;
-  text-align: center;
-}
-
-.nav {
-  padding-left: 0;
-  list-style: none;
-}

@@ -1,3 +1,5 @@
+import React from 'react';
+
 const Tab = ({ isActive, label, onClick }) => {
   return (
     <li>
