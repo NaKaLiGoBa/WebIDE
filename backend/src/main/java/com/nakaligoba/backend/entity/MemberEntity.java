@@ -23,7 +23,4 @@ public class MemberEntity extends BaseEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
-
-    @Column(name = "salt", nullable = false)
-    private String salt;
 }
