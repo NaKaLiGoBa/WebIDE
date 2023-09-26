@@ -18,7 +18,7 @@ const Index = () => {
 
   return (
     <>
-   <div className="w-11 pr-2 h-screen bg-[#0E1525] z-10 flex items-center flex-col">
+   <div className="w-11 pr-2  bg-[#0E1525] z-10 flex items-center flex-col">
       <div className="pt-2 pb-2 flex">
         <div style={{ backgroundColor: selectedTab === 'tabFiles'?'#609AE2':' #0E1525', width:selectedTab === 'tabFiles'? '4px' : '4px',marginRight :selectedTab === 'tabFiles'? '3px' : '3px' }}></div>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5}  className="w-7 h-7"
