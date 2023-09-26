@@ -89,7 +89,7 @@ const Index = () => {
   }, [activeTab, tabs]);
 
   return (
-    <div id="inner_layout_top" className="bg-[#0E1525] overflow-hidden">
+    <div id="inner_layout_top" className="bg-[#0E1525] ">
       <ul
         ref={tabsRef}
         onWheel={handleWheel}
@@ -114,7 +114,7 @@ const Index = () => {
         <CodeMirror
           key={activeTab}
           value={value}
-          height="56vh;" // #inner_layout_top 가 60vh로 설정되어있기때문
+          height="calc(60vh - 81px)" // 왜 header와 north_tab 을 합친 56+47=103 이 아니라 81을 빼야 외관상 올바른지?
           extensions={[activeExtension]}
           onChange={onChange}
           theme={tokyoNight} // 테마 
