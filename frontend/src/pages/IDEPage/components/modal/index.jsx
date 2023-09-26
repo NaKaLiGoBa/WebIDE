@@ -17,10 +17,14 @@ const style = {
     p: 4,
 };
 
-export default function Index() {
+export default function Index({onProjClick}) {
     const [open, setOpen] = React.useState(true);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    // const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen((prev)=>!prev);
+        onProjClick(false)
+    }
+
 
     return (
         <div>
@@ -31,8 +35,12 @@ export default function Index() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Text in a modal
+                    <Typography id="modal-modal-title" variant="h6" component="h2" className='flex' onClick={()=>{handleClose();}}>
+                        <button className='bg-[#FF524E] rounded-full px-1 py-1'>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        </button>
                     </Typography>
                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                         Duis mollis, est non commodo luctus, nisi erat porttitor ligula.

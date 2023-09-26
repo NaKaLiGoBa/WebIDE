@@ -5,18 +5,17 @@ import FileExplorer from "./components/file_explorer";
 import Header from "./components/header";
 import Sidebar from "./components/sidebar";
 import Modal from "./components/modal";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const index = () => {
   const [onModalClick, setOnModalClick] = useState(false);
   const projectBtnHandler = (isOn) => {
     setOnModalClick(isOn);
-    console.log("clicked!");
   };
 
   return (
     <div>
-      {onModalClick && <Modal />}
+           {onModalClick && <Modal onProjClick={projectBtnHandler}/>}
       <div className="flex flex-col h-screen relative">
         <Header onProjClick={projectBtnHandler} />
         <div className="flex flex-row h-full">
