@@ -4,7 +4,10 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import ModalMenu_Btn from './ModalMenu_Btn';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6e65c30a7e02ce852ec6aacbd02f5f06649d2af9
 
 const style = {
    
