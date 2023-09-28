@@ -3,15 +3,27 @@ spring:
     ansi:
       enabled: always
 
+  # DB
   datasource:
-    url: jdbc:h2:tcp://localhost/~/test
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: ${DB_URL}
+    username: ${DB_USER_ID}
+    password: ${DB_USER_PW}
+    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+
+  # SMTP
+  mail:
+    host: ${SMTP_HOST}
+    port: ${SMTP_PORT}
+    username: ${SMTP_ID}
+    password: ${SMTP_PW}
+    properties:
+      debug: true
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: true
 
 # Spring Security
 jwt:
   header: Authorization
-  secret: c2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQtc2lsdmVybmluZS10ZWNoLXNwcmluZy1ib290LWp3dC10dXRvcmlhbC1zZWNyZXQK
-  token-validity-in-seconds: 86400
-
+  secret: ${JWT_SECRET_KEY}
+  token-validity-in-seconds: ${JWT_VALID_TIME}
