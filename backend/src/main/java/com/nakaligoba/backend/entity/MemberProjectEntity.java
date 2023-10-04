@@ -1,5 +1,6 @@
 package com.nakaligoba.backend.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,4 +27,11 @@ public class MemberProjectEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private MemberEntity member;
+
+    @Builder
+    public MemberProjectEntity(Role role, ProjectEntity project, MemberEntity member) {
+        this.role = role;
+        this.project = project;
+        this.member = member;
+    }
 }

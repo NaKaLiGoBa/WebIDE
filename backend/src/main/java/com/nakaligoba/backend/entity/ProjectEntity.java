@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "projects")
@@ -25,6 +26,9 @@ public class ProjectEntity extends BaseEntity {
     // Todo storage_key 추가
     @Column(name = "storage_key", nullable = false)
     private String storageKey;
+
+    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+    private List<MemberProjectEntity> projectToMembers;
 
     @Builder
     public ProjectEntity(String name, String description, String storageKey) {
