@@ -1,10 +1,10 @@
 import axios from 'axios';
-import {API_BASE_URL} from "../config/api-config.js";
+// import {API_BASE_URL} from "../config/api-config.js";
 
 async function call(apiUrl, method, requestData = {}) {
     try {
         const response = await axios({
-            url: API_BASE_URL + apiUrl,
+            url: 'http://50.19.246.89:8080/api' + apiUrl,
             method,
             ...requestData
         });

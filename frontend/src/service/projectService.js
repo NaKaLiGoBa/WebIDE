@@ -2,7 +2,7 @@ import apiUtils from "./apiUtils"
 
 export const createProject = async (projectData)=> {
     try {
-        const response =await apiUtils.create('/V1/projects', projectData);
+        const response =await apiUtils.create('/v1/projects', projectData);
     return response 
  }catch(error){
     console.log('Error creating project', error);

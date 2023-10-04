@@ -24,40 +24,38 @@ const style = {
     borderRadius:'21px',
 
 };
-const PROJECTS = [
-    {
-        id: 1,
-        template : 'Java',
-        name: "네카라쿠배 webIDE Project",
-        date: "2023-09-25",
-        collaborators: ["김지민", "장원영","안유진"]
-    },
-    {
-        id: 2,
-        template : 'Python',
-        name: "New Project",
-        date: "2023-08-20",
-        collaborators: ["박지영", "김민수", "최하늘"]
-    },
-    {
-        id: 3,
-        template : 'JavaScript',
-        name: "프로젝트 C",
-        date: "2023-07-15",
-        collaborators: ["정태영", "황미나"]
-    }
+// const PROJECTS = [
+//     {
+//         id: 1,
+//         template : 'Java',
+//         name: "네카라쿠배 webIDE Project",
+//         date: "2023-09-25",
+//         collaborators: ["김지민", "장원영","안유진"]
+//     },
+//     {
+//         id: 2,
+//         template : 'Python',
+//         name: "New Project",
+//         date: "2023-08-20",
+//         collaborators: ["박지영", "김민수", "최하늘"]
+//     },
+//     {
+//         id: 3,
+//         template : 'JavaScript',
+//         name: "프로젝트 C",
+//         date: "2023-07-15",
+//         collaborators: ["정태영", "황미나"]
+//     }
 
-];
+// ];
 
 
 
 export default function Index({onProjClick,modal,setModal,createModal}) {
     const [open, setOpen] = React.useState(true);
-    const [projects,setProjects] =React.useState(PROJECTS)
-
+    const [projects,setProjects] =React.useState([])
     const [editingId, setEditingId] = React.useState(null);
-    const [EditingName, setEditingName] = React.useState('');
-    
+    // const [EditingName, setEditingName] = React.useState('');
     const [pjtName, setPjtName] = React.useState('');
     const [pjtTextAreaValue, setPjtTextAreaValue] = React.useState('');
     const [template, setTemplate] = React.useState('');
@@ -88,13 +86,12 @@ export default function Index({onProjClick,modal,setModal,createModal}) {
         onProjClick(false)
     }
 
-    
 
-    
 
     const templateIcon = (template)=>{
         switch(template){
             case "Java" : 
+
                 return <BiLogoJava size='30' color='#0078F1' />
             case 'Python' :
                 return<BiLogoPython size='30' color='#0093B0' />
@@ -118,6 +115,7 @@ export default function Index({onProjClick,modal,setModal,createModal}) {
       };
       
    
+
     const createClose = ()=>{
         setModal(false);
           onProjClick(false)
@@ -153,18 +151,18 @@ export default function Index({onProjClick,modal,setModal,createModal}) {
 
     const createProject = async () =>{
         const newProject ={
-            id : nextId,
+            // id : nextId,
             template: template,
             name: pjtName ,
             description : pjtTextAreaValue, 
-            collaborators: []
+            // collaborators: []
             // date: new Date().toISOString().slice(0, 10),
         }
         try {
             const response= await projectService.createProject(newProject);
             if(response.sucess){
                 setProjects(prevProjects => [...prevProjects, newProject]);
-                setNextId(prevId => prevId + 1);
+                // setNextId(prevId => prevId + 1);
                 setPjtName('');
                 setPjtTextAreaValue('');
                 // createClose();
@@ -203,10 +201,11 @@ export default function Index({onProjClick,modal,setModal,createModal}) {
                     <Typography id="modal-modal-template" component="div"  sx={{ my: 2}} style={{height : '430px'}}>
                      {projects.map((project)=>(
                         <div key={project.id} className='flex  py-4 hover:bg-[#46425e] ' style={{paddingLeft:'30px',fontSize:'22px'}} >
+                            <div className='flex' >
                                 <div style={{width:'70px'}}>
                                     {templateIcon(project.template)}
                                 </div>
-                                <div style={{ width: '460px' }}>
+                                <div style={{ width: '430px' }}>
                                     {editingId === project.id ? (
                                         <form onSubmit={nameSubmit}>
                                             <input 
@@ -222,6 +221,7 @@ export default function Index({onProjClick,modal,setModal,createModal}) {
                                 </div>
                                 <span style={{width:'150px'}} className='flex justify-center' >{project.date}</span>
                             <span className="flex" style={{width:'360px', marginLeft:'150px'}}>{project.collaborators.map(c => <ProfileBadge key={c} name={typeof c === 'string' ? c.slice(0, 1) : ''} />)}</span>
+                            </div>
                                 <ModalMenu_Btn 
                                     editingId={project.id}  
                                     setEditingId={setEditingId}  
