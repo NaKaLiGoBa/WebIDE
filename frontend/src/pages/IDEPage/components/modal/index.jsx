@@ -221,9 +221,7 @@ export default function Index({onProjClick,modal,setModal,createModal}) {
                                     )}
                                 </div>
                                 <span style={{width:'150px'}} className='flex justify-center' >{project.date}</span>
-                                {/*<span style={{width:'360px', marginLeft:'150px'}}>{project.collaborators.join(', ')}</span>*/}
-                            <span className="flex">{project.collaborators.map(c => <ProfileBadge name={c[0]} />)
-                            }</span>
+                            <span className="flex" style={{width:'360px', marginLeft:'150px'}}>{project.collaborators.map(c => <ProfileBadge key={c} name={typeof c === 'string' ? c.slice(0, 1) : ''} />)}</span>
                                 <ModalMenu_Btn 
                                     editingId={project.id}  
                                     setEditingId={setEditingId}  

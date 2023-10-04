@@ -227,7 +227,7 @@ export default function Explorer({ selectedTab,createModal,projectBtnHandler }) 
 
   if(selectedTab === 'tabFiles'){
   return (
-    <div style={{width : '200px', border: '0.5px solid black'}} className='bg-[#0E1525]  text-white '>
+    <div style={{width : '440px', border: '0.5px solid black'}} className='bg-[#0E1525]  text-white '>
       {/* <Filesearch searchChange={searchChange} searchValue={searchValue}/> */}
       <div className=' flex justify-between font-medium pl-1 pr-2 pt-1'>
         Files

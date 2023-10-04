@@ -4,7 +4,7 @@ export default function TabSettings({createModal, projectBtnHandler}) {
     createModal();
   };
   return (
-    <div style={{width : '200px', border: '0.5px solid black'}} className='bg-[#0E1525]  text-white flex '>
+    <div style={{width : '440px', border: '0.5px solid black'}} className='bg-[#0E1525]  text-white flex '>
        <div className=' font-medium pl-1 pr-2 pt-1'>
       Settings
         <button className="flex text-sm leading-3 pl-2 pt-2 items-center " onClick={handleCreateModal}> 
