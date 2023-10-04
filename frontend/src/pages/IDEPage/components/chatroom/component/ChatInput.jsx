@@ -7,6 +7,7 @@ const ChatInput = (props) => {
   };
   const handleOnKeyPress = (e) => {
     if (e.key === "Enter") {
+      if (e.nativeEvent.isComposing) return;
       props.onEnter(message);
       setMessage("");
     }
