@@ -3,24 +3,18 @@ package com.nakaligoba.backend.service;
 import com.nakaligoba.backend.controller.MemberController.AuthEmailDto;
 import com.nakaligoba.backend.controller.MemberController.MemberDto;
 import com.nakaligoba.backend.entity.MemberEntity;
-import com.nakaligoba.backend.jwt.JwtProvider;
 import com.nakaligoba.backend.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.time.LocalDateTime;
 import java.util.Random;
 
 @PropertySource("classpath:application.yml")
@@ -33,8 +27,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-    private final JwtProvider jwtProvider;
     private final JavaMailSender javaMailSender;
 
     @Transactional
@@ -50,27 +42,6 @@ public class MemberService {
                 .build();
 
         memberRepository.save(memberEntity);
-    }
-
-    @Transactional
-    public String signin(MemberDto memberDto) {
-        if (memberRepository.existsByEmail(memberDto.getEmail())) {
-            MemberEntity memberEntity = memberRepository.findByEmail(memberDto.getEmail());
-
-            if (passwordEncoder.matches(memberDto.getPassword(), memberEntity.getPassword())) {
-                UsernamePasswordAuthenticationToken authenticationToken
-                        = new UsernamePasswordAuthenticationToken(memberDto.getEmail(), memberDto.getPassword());
-                Authentication authentication
-                        = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                return jwtProvider.createJwt(authentication);
-            } else {
-                throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-            }
-        } else {
-            throw new IllegalArgumentException("사용자 정보를 찾을 수 없습니다.");
-        }
     }
 
     @Transactional
@@ -100,6 +71,7 @@ public class MemberService {
             mimeMessageHelper.setTo(authEmailDto.getEmail());
             mimeMessageHelper.setSubject(title);
             mimeMessageHelper.setText(contents, true);
+
             javaMailSender.send(mimeMessage);
         } catch (MessagingException e) {
             throw new RuntimeException(e);

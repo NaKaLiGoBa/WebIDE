@@ -1,7 +1,6 @@
 package com.nakaligoba.backend.controller;
 
 import com.nakaligoba.backend.service.MemberService;
-import com.nakaligoba.backend.utils.JwtUtils;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -34,20 +33,6 @@ public class MemberController {
         memberService.signup(memberDto);
 
         return ResponseEntity.ok(new SignupResponse("회원가입이 완료되었습니다."));
-    }
-
-    // 로그인
-    @PostMapping("/signin")
-    public ResponseEntity<SigninResponse> signin(@Valid @RequestBody SigninRequest request) {
-        MemberDto memberDto = MemberDto.builder()
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .build();
-
-        // TODO : 추후 예외처리 필요
-        String jwt = memberService.signin(memberDto);
-
-        return ResponseEntity.ok(new SigninResponse(JwtUtils.BEARER + jwt, "정상적으로 로그인 되었습니다."));
     }
 
     @PostMapping("/email")

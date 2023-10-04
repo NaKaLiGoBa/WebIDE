@@ -13,15 +13,14 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class JwtUserDetailsService implements UserDetailsService {
+public class JwtMemberDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         MemberEntity memberEntity = memberRepository.findByEmail(email);
-
-        log.info(memberEntity.getEmail());
+        log.info("email : " + memberEntity.getEmail());
 
         return new JwtDetails(memberEntity);
     }

@@ -24,6 +24,6 @@ spring:
 
 # Spring Security
 jwt:
-  header: Authorization
+  claim: ${CLAIM}
   secret: ${JWT_SECRET_KEY}
   token-validity-in-seconds: ${JWT_VALID_TIME}
