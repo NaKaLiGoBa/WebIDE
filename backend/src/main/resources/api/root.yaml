@@ -8,6 +8,8 @@ servers:
 paths:
   /v1/auth/email:
     $ref: './auth/email.yaml'
+  /v1/auth/email/check:
+    $ref: './auth/emailCheck.yaml'
   /v1/auth/signin:
     $ref: './auth/signin.yaml'
   /v1/auth/signup:

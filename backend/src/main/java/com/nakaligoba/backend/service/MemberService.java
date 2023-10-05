@@ -1,10 +1,11 @@
 package com.nakaligoba.backend.service;
 
-import com.nakaligoba.backend.controller.MemberController;
-import com.nakaligoba.backend.controller.MemberController.*;
+import com.nakaligoba.backend.controller.MemberController.AuthEmailCheckDto;
+import com.nakaligoba.backend.controller.MemberController.AuthEmailDto;
+import com.nakaligoba.backend.controller.MemberController.MemberDto;
 import com.nakaligoba.backend.entity.MemberEntity;
 import com.nakaligoba.backend.repository.MemberRepository;
-import com.nakaligoba.backend.utils.RedisUtils;
+import com.nakaligoba.backend.utils.AuthNumberManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -30,7 +31,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
-    private final RedisUtils redisUtils;
+    private final AuthNumberManager authNumberManager;
 
     @Transactional
     public void signup(MemberDto memberDto) {
@@ -51,7 +52,7 @@ public class MemberService {
     public void authEmail(AuthEmailDto authEmailDto) {
         String authNumber = getAuthNumber();
 
-        redisUtils.setData(authEmailDto.getEmail(), authNumber, redisUtils.duration);
+        authNumberManager.setData(authEmailDto.getEmail(), authNumber);
         sendAuthEmail(authEmailDto, authNumber);
     }
 
@@ -85,14 +86,14 @@ public class MemberService {
 
     @Transactional
     public String authEmailCheck(AuthEmailCheckDto authEmailCheckDto) {
-        return Optional.ofNullable(redisUtils.getData(authEmailCheckDto.getEmail()))
+        return Optional.ofNullable(authNumberManager.getData(authEmailCheckDto.getEmail()))
                 .map(value -> {
-                    if(value.equals(authEmailCheckDto.getAuthNumber())) {
-                        redisUtils.deleteData(authEmailCheckDto.getEmail());
+                    if (value.equals(authEmailCheckDto.getAuthNumber())) {
+                        authNumberManager.removeCode(authEmailCheckDto.getAuthNumber());
                         return AuthEmailCheckDto.AUTH_SUCCESS;
-                    }
-                    else return AuthEmailCheckDto.AUTH_FAIL;
+                    } else return AuthEmailCheckDto.AUTH_FAIL;
                 })
                 .orElse(AuthEmailCheckDto.AUTH_FAIL);
+
     }
 }
