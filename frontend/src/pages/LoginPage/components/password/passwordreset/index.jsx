@@ -11,7 +11,7 @@ const index = () => {
 //   //테스트
 //   const mock = new MockAdapter(axios);
 //   mock
-//     .onPost("http://50.19.246.89:8080/api/v1/auth/password/reset?")
+//     .onPost("http://50.19.246.89:8080/api/v1/auth/password/reset/check")
 //     .reply(200, {
 //         code: 200,
 //         message: "비밀번호 재설정이 완료되었습니다.",
@@ -36,7 +36,7 @@ const index = () => {
     }
     try {
       const response = await axios.post(
-        "http://50.19.246.89:8080/api/v1/auth/password/reset?",
+        "http://50.19.246.89:8080/api/v1/auth/password/reset/check",
         {
           token, // 서버로 URL에서 추출한 토큰 전달
           newPassword, // 새로운 비밀번호 전달

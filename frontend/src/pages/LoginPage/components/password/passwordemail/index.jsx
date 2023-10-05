@@ -11,7 +11,7 @@ const index = () => {
   // //테스트
   // const mock = new MockAdapter(axios);
   // mock
-  //   .onPost("http://50.19.246.89:8080/api/v1/auth/password/email?")
+  //   .onPost("http://50.19.246.89:8080/api/v1/auth/password/reset/email")
   //   .reply(200, {
   //     code: 200,
   //     message: "비밀번호 재설정 요청 성공",
@@ -28,7 +28,7 @@ const index = () => {
   const handlePasswordResetRequest = async () => {
     try {
       const response = await axios.post(
-        "http://50.19.246.89:8080/api/v1/auth/password/email?",
+        "http://50.19.246.89:8080/api/v1/auth/password/reset/email",
         {
           email,
         }

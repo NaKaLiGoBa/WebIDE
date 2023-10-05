@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import logoImage from "../../네카라쿠배.png";
 import backImage from "../../background.png";
 import axios from "axios";
-// import MockAdapter from "axios-mock-adapter";
 
 const index = () => {
   const navigate = useNavigate();
@@ -19,18 +18,6 @@ const index = () => {
     const { name, value } = e.target;
     setLoginValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
-
-  // //테스트
-  // const mock = new MockAdapter(axios);
-  // mock.onPost("http://localhost:8080/api/v1/auth/email").reply(200, {
-  //   message: "인증번호를 전송하였습니다.",
-  // });
-  // mock.onPost("http://localhost:8080/api/v1/auth/email/verify").reply(200, {
-  //   message: "인증 완료되었습니다.",
-  // });
-  // mock.onPost("http://localhost:8080/api/v1/auth/signup").reply(200, {
-  //   message: "회원가입이 완료되었습니다.",
-  // });
 
   //이메일 인증
   const [verificationCode, setVerificationCode] = useState("");
@@ -70,7 +57,7 @@ const index = () => {
     try {
       // 인증 코드 확인 API 호출
       const response = await axios.post(
-        "http://50.19.246.89:8080/api/v1/auth/email/verify",
+        "http://50.19.246.89:8080/api/v1/auth/email/check",
         {
           email: loginValues.email,
           authNumber: verificationCode,

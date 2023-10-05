@@ -23,10 +23,6 @@ const index = () => {
   // 로그인 에러 상태 관리
   const [errorMessage, setErrorMessage] = useState("");
 
-  // // 테스트
-  // const testEmail = "asd";
-  // const testPassword = "asd";
-
   const checkLogin = async () => {
     if (!loginValues.email && !loginValues.password) {
       setErrorMessage("이메일을 입력해주세요");
@@ -46,28 +42,37 @@ const index = () => {
           password: loginValues.password,
         }
       );
-      if (response.data && response.data.accessToken) {
-        localStorage.setItem("token", response.data.accessToken);
-        setErrorMessage(""); // 에러 상태 초기화
-        navigate("/idepage");
+      if (response.status === 200) {
+        // 성공 로직
+        if (response.data && response.data.accessToken) {
+          localStorage.setItem("token", response.data.accessToken);
+          setErrorMessage(""); // 에러 상태 초기화
+          navigate("/idepage");
+        } else {
+          setErrorMessage("로그인에 실패했습니다. 다시 시도해 주세요.");
+        }
+      } else if (response.status === 401) {
+        // 권한 없음, 로그인 실패 로직
+        setErrorMessage("이메일 또는 비밀번호가 일치하지 않습니다.");
       } else {
-        setErrorMessage("로그인에 실패했습니다. 다시 시도해 주세요.");
+        // 기타 에러 로직
+        setErrorMessage("서버에서 오류가 발생하였습니다. 다시 시도해 주세요.");
       }
     } catch (error) {
       //로그인 에러 표시
       console.error("Login Error:", error);
-      setErrorMessage("로그인에 실패했습니다. 다시 시도해 주세요.");
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        // 서버에서 에러 메시지를 제공하는 경우
+        setErrorMessage(error.response.data.message);
+      } else {
+        // 그 외의 클라이언트 측에서 잡힌 에러
+        setErrorMessage("로그인에 실패하였습니다. 다시 시도해 주세요.");
+      }
     }
-    // //테스트
-    // if (
-    //   loginValues.email === testEmail &&
-    //   loginValues.password === testPassword
-    // ) {
-    //   setErrorMessage(""); // 에러 상태 초기화
-    //   navigate("/idepage");
-    // } else {
-    //   setErrorMessage("이메일이나 비밀번호가 틀립니다"); // 로그인 에러 표시
-    // }
   };
 
   const handleKakaoLogin = () => {
@@ -130,8 +135,10 @@ const index = () => {
               >
                 <span className="text-white text-sm font-bold">로그인</span>
               </div>
-              <div className="my-2 text-center"
-              onClick={() => navigate("password")}>
+              <div
+                className="my-2 text-center"
+                onClick={() => navigate("password")}
+              >
                 <span className="text-sm font-bold text-blue-600 cursor-pointer ">
                   비밀번호 찾기
                 </span>
