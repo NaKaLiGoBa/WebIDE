@@ -46,6 +46,22 @@ public class MemberController {
         return ResponseEntity.ok(new EmailAuthResponse("인증번호를 전송하였습니다."));
     }
 
+    @PostMapping("/email/check")
+    public ResponseEntity<EmailAuthCheckResponse> authEmailCheck(@Valid @RequestBody EmailAuthCheckRequest request) {
+        AuthEmailCheckDto authEmailCheckDto = AuthEmailCheckDto.builder()
+                .email(request.email)
+                .authNumber(request.authNumber)
+                .build();
+
+        String result = memberService.authEmailCheck(authEmailCheckDto);
+
+        if(AuthEmailCheckDto.AUTH_SUCCESS.equals(result)) {
+            return ResponseEntity.ok(new EmailAuthCheckResponse("200", "인증에 성공하였습니다."));
+        } else {
+            return ResponseEntity.badRequest().body(new EmailAuthCheckResponse("400", "인증에 실패하였습니다."));
+        }
+    }
+
     @Data
     static class SignupRequest {
         @NotBlank
@@ -91,6 +107,22 @@ public class MemberController {
     }
 
     @Data
+    @NoArgsConstructor
+    static class EmailAuthCheckRequest {
+        @NotBlank
+        private String email;
+
+        @NotBlank
+        private String authNumber;
+    }
+
+    @Data
+    static class EmailAuthCheckResponse {
+        private final String code;
+        private final String message;
+    }
+
+    @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
@@ -106,5 +138,17 @@ public class MemberController {
     @NoArgsConstructor
     public static class AuthEmailDto {
         private String email;
+    }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class AuthEmailCheckDto {
+        public static final String AUTH_FAIL = "0";
+        public static final String AUTH_SUCCESS = "1";
+
+        private String email;
+        private String authNumber;
     }
 }

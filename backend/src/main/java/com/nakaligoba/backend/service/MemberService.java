@@ -1,9 +1,10 @@
 package com.nakaligoba.backend.service;
 
-import com.nakaligoba.backend.controller.MemberController.AuthEmailDto;
-import com.nakaligoba.backend.controller.MemberController.MemberDto;
+import com.nakaligoba.backend.controller.MemberController;
+import com.nakaligoba.backend.controller.MemberController.*;
 import com.nakaligoba.backend.entity.MemberEntity;
 import com.nakaligoba.backend.repository.MemberRepository;
+import com.nakaligoba.backend.utils.RedisUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Optional;
 import java.util.Random;
 
 @PropertySource("classpath:application.yml")
@@ -28,6 +30,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
+    private final RedisUtils redisUtils;
 
     @Transactional
     public void signup(MemberDto memberDto) {
@@ -47,6 +50,8 @@ public class MemberService {
     @Transactional
     public void authEmail(AuthEmailDto authEmailDto) {
         String authNumber = getAuthNumber();
+
+        redisUtils.setData(authEmailDto.getEmail(), authNumber, redisUtils.duration);
         sendAuthEmail(authEmailDto, authNumber);
     }
 
@@ -76,5 +81,18 @@ public class MemberService {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Transactional
+    public String authEmailCheck(AuthEmailCheckDto authEmailCheckDto) {
+        return Optional.ofNullable(redisUtils.getData(authEmailCheckDto.getEmail()))
+                .map(value -> {
+                    if(value.equals(authEmailCheckDto.getAuthNumber())) {
+                        redisUtils.deleteData(authEmailCheckDto.getEmail());
+                        return AuthEmailCheckDto.AUTH_SUCCESS;
+                    }
+                    else return AuthEmailCheckDto.AUTH_FAIL;
+                })
+                .orElse(AuthEmailCheckDto.AUTH_FAIL);
     }
 }
