@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import logoImage from "../../네카라쿠배.png";
 import backImage from "../../background.png";
 import axios from "axios";
-import MockAdapter from "axios-mock-adapter";
+// import MockAdapter from "axios-mock-adapter";
 
 const index = () => {
   const navigate = useNavigate();
@@ -20,17 +20,17 @@ const index = () => {
     setLoginValues((prevValues) => ({ ...prevValues, [name]: value }));
   };
 
-  //테스트
-  const mock = new MockAdapter(axios);
-  mock.onPost("http://localhost:8080/api/v1/auth/email").reply(200, {
-    message: "인증번호를 전송하였습니다.",
-  });
-  mock.onPost("http://localhost:8080/api/v1/auth/email/verify").reply(200, {
-    message: "인증 완료되었습니다.",
-  });
-  mock.onPost("http://localhost:8080/api/v1/auth/signup").reply(200, {
-    message: "회원가입이 완료되었습니다.",
-  });
+  // //테스트
+  // const mock = new MockAdapter(axios);
+  // mock.onPost("http://localhost:8080/api/v1/auth/email").reply(200, {
+  //   message: "인증번호를 전송하였습니다.",
+  // });
+  // mock.onPost("http://localhost:8080/api/v1/auth/email/verify").reply(200, {
+  //   message: "인증 완료되었습니다.",
+  // });
+  // mock.onPost("http://localhost:8080/api/v1/auth/signup").reply(200, {
+  //   message: "회원가입이 완료되었습니다.",
+  // });
 
   //이메일 인증
   const [verificationCode, setVerificationCode] = useState("");
@@ -44,7 +44,7 @@ const index = () => {
     try {
       // 이메일 인증번호 발송 API 호출
       const response = await axios.post(
-        "http://localhost:8080/api/v1/auth/email",
+        "http://50.19.246.89:8080/api/v1/auth/email",
         { email: loginValues.email }
       );
       if (response.data && response.data.message) {
@@ -70,19 +70,19 @@ const index = () => {
     try {
       // 인증 코드 확인 API 호출
       const response = await axios.post(
-        "http://localhost:8080/api/v1/auth/email/verify",
+        "http://50.19.246.89:8080/api/v1/auth/email/verify",
         {
           email: loginValues.email,
-          certificationNumber: verificationCode,
+          authNumber: verificationCode,
         }
       );
-      if (response.data && response.data.message) {
+      if (response.data.code === "200") {
         alert(response.data.message);
         setIsEmailVerified(false); // 인증에 성공하면 UI 숨김
         setSuccessCode(true); // 코드 인증 성공
         // 추가적인 로직 (예: 인증 성공 시 처리 등)
       } else {
-        alert("인증 코드가 올바르지 않습니다.");
+        alert(response.data.message);
       }
     } catch (error) {
       console.error("Code verification error!", error);
@@ -113,7 +113,7 @@ const index = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/auth/signup",
+        "http://50.19.246.89:8080/api/v1/auth/signup",
         {
           email: loginValues.email,
           password: loginValues.password,

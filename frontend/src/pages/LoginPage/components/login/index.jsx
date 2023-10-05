@@ -40,7 +40,7 @@ const index = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/auth/signin",
+        "http://50.19.246.89:8080/api/v1/auth/signin",
         {
           email: loginValues.email,
           password: loginValues.password,
@@ -130,7 +130,8 @@ const index = () => {
               >
                 <span className="text-white text-sm font-bold">로그인</span>
               </div>
-              <div className="my-2 text-center">
+              <div className="my-2 text-center"
+              onClick={() => navigate("password")}>
                 <span className="text-sm font-bold text-blue-600 cursor-pointer ">
                   비밀번호 찾기
                 </span>
