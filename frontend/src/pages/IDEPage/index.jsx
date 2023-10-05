@@ -25,7 +25,7 @@ const index = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get("user");
+        const response = await axiosInstance.get("projects");
         setUser(response.data);
       } catch (error) {
         console.error("Error fetching user data: ", error);
