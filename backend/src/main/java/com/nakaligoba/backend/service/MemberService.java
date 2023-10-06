@@ -1,12 +1,12 @@
 package com.nakaligoba.backend.service;
 
-import com.nakaligoba.backend.controller.MemberController.AuthEmailCheckDto;
-import com.nakaligoba.backend.controller.MemberController.AuthEmailDto;
-import com.nakaligoba.backend.controller.MemberController.MemberDto;
+import com.nakaligoba.backend.controller.MemberController.*;
 import com.nakaligoba.backend.entity.MemberEntity;
 import com.nakaligoba.backend.repository.MemberRepository;
 import com.nakaligoba.backend.utils.AuthNumberManager;
+import com.nakaligoba.backend.utils.BasicUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Optional;
-import java.util.Random;
 
+@Slf4j
 @PropertySource("classpath:application.yml")
 @RequiredArgsConstructor
 @Service
@@ -32,6 +32,7 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
     private final AuthNumberManager authNumberManager;
+    private final BasicUtils basicUtils;
 
     @Transactional
     public void signup(MemberDto memberDto) {
@@ -50,15 +51,10 @@ public class MemberService {
 
     @Transactional
     public void authEmail(AuthEmailDto authEmailDto) {
-        String authNumber = getAuthNumber();
+        String authNumber = basicUtils.getAuthNumber();
 
         authNumberManager.setData(authEmailDto.getEmail(), authNumber);
         sendAuthEmail(authEmailDto, authNumber);
-    }
-
-    private String getAuthNumber() {
-        Random random = new Random();
-        return String.valueOf(111111 + random.nextInt(888889));
     }
 
     private void sendAuthEmail(AuthEmailDto authEmailDto, String authNumber) {
@@ -70,11 +66,15 @@ public class MemberService {
         contents += "회원가입 인증번호 : ";
         contents += authNumber;
 
+        sendEmail(title, contents, authEmailDto.getEmail());
+    }
+
+    private void sendEmail(String title, String contents, String toEmail) {
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true, "utf-8");
             mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(authEmailDto.getEmail());
+            mimeMessageHelper.setTo(toEmail);
             mimeMessageHelper.setSubject(title);
             mimeMessageHelper.setText(contents, true);
 
@@ -94,6 +94,51 @@ public class MemberService {
                     } else return AuthEmailCheckDto.AUTH_FAIL;
                 })
                 .orElse(AuthEmailCheckDto.AUTH_FAIL);
+    }
 
+    @Transactional
+    public void passwordReset(PasswordResetDto passwordResetDto) {
+        String resetPasswordToken = basicUtils.getUUID();
+
+        log.info("resetPasswordToken : " + resetPasswordToken);
+
+        authNumberManager.setData(resetPasswordToken, passwordResetDto.getEmail());
+        passwordResetEmail(passwordResetDto, resetPasswordToken);
+    }
+
+    private void passwordResetEmail(PasswordResetDto passwordResetDto, String resetPasswordToken) {
+        String title = "[NakaLiGoBa] 비밀번호 재설정 메일입니다.";
+        String passwordResetAuthLink = "http://50.19.246.89:8080/api/v1/auth/password/reset/email/" + resetPasswordToken;
+        String contents = "";
+        contents += "NakaLiGoBa 비밀번호 재설정 안내 메일입니다.<br/>";
+        contents += "비밀번호 재발급을 원하시면 아래의 버튼을 누르세요.<br/><br/>";
+        contents += "<a href=\"" + passwordResetAuthLink + "\">비밀번호 재설정</a>";
+
+        sendEmail(title, contents, passwordResetDto.getEmail());
+    }
+
+    @Transactional
+    public String passwordResetAuth(PasswordResetAuthDto passwordResetAuthDto) {
+        String email = authNumberManager.getData(passwordResetAuthDto.getToken());
+
+        return Optional.ofNullable(memberRepository.findByEmail(email))
+                .map(value -> PasswordResetAuthDto.AUTH_SUCCESS)
+                .orElse(PasswordResetAuthDto.AUTH_FAIL);
+    }
+
+    @Transactional
+    public String passwordResetCheck(PasswordResetCheckDto passwordResetCheckDto) {
+        String email = authNumberManager.getData(passwordResetCheckDto.getToken());
+        log.info("email : " + email);
+
+        return Optional.ofNullable(memberRepository.findByEmail(email))
+                .map(updatedMemberEntity -> {
+                    updatedMemberEntity.setPassword(passwordEncoder.encode(passwordResetCheckDto.getNewPassword()));
+                    memberRepository.save(updatedMemberEntity);
+                    authNumberManager.removeCode(passwordResetCheckDto.getToken());
+
+                    return PasswordResetCheckDto.RESET_SUCCESS;
+                })
+                .orElse(PasswordResetCheckDto.RESET_FAIL);
     }
 }

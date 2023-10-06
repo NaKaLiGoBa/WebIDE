@@ -18,12 +18,6 @@ spring:
       mail.smtp.ssl.enable: true
       mail.smtp.starttls.enable: true
 
-  # redis
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    auth-num-validity-in-seconds: ${REDIS_AUTH_NUM_VALID_TIME}
-
 # Spring Security
 jwt:
   claim: ${CLAIM}
