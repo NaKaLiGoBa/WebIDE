@@ -21,7 +21,7 @@ public class JwtProvider {
         JwtDetails principalDetails = (JwtDetails) authentication.getPrincipal();
         String jwtToken = JWT.create()
                 .withSubject(principalDetails.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getEXPIRATION_TIME()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + jwtProperties.getEXPIRATION_TIME() * 1000L))
                 .withClaim(jwtProperties.getCLAIM(), principalDetails.getUsername())
                 .sign(Algorithm.HMAC512(jwtProperties.getSECRET_KEY()));
 
