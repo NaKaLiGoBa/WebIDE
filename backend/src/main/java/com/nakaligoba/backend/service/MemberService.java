@@ -32,7 +32,6 @@ public class MemberService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final JavaMailSender javaMailSender;
     private final AuthNumberManager authNumberManager;
-    private final BasicUtils basicUtils;
 
     @Transactional
     public void signup(MemberDto memberDto) {
@@ -51,7 +50,7 @@ public class MemberService {
 
     @Transactional
     public void authEmail(AuthEmailDto authEmailDto) {
-        String authNumber = basicUtils.getAuthNumber();
+        String authNumber = BasicUtils.getAuthNumber();
 
         authNumberManager.setData(authEmailDto.getEmail(), authNumber);
         sendAuthEmail(authEmailDto, authNumber);
@@ -98,7 +97,7 @@ public class MemberService {
 
     @Transactional
     public void passwordReset(PasswordResetDto passwordResetDto) {
-        String resetPasswordToken = basicUtils.getUUID();
+        String resetPasswordToken = BasicUtils.getUUID();
 
         log.info("resetPasswordToken : " + resetPasswordToken);
 

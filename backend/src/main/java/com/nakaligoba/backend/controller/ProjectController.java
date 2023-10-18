@@ -26,13 +26,12 @@ public class ProjectController {
 
     private final ProjectService projectService;
     private final ReadProjectService readProjectService;
-    private final JwtUtils jwtUtils;
 
     @PostMapping
     public ResponseEntity<ProjectCreateResponse> createProject(
             @Valid @RequestBody ProjectCreateRequest request
     ) {
-        String email = jwtUtils.getEmailFromSpringSession();
+        String email = JwtUtils.getEmailFromSpringSession();
         CreateProjectDto dto = CreateProjectDto.builder()
                 .email(email)
                 .name(request.name)
@@ -45,14 +44,14 @@ public class ProjectController {
 
     @GetMapping
     public ResponseEntity<List<ProjectListResponse>> getAllProjects() {
-        String email = jwtUtils.getEmailFromSpringSession();
+        String email = JwtUtils.getEmailFromSpringSession();
         List<ProjectListResponse> projects = projectService.getProjectsByEmail(email);
         return ResponseEntity.ok(projects);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ReadProjectDirectoryResponse> readProjectDirectory(@PathVariable Long id) {
-        String email = jwtUtils.getEmailFromSpringSession();
+        String email = JwtUtils.getEmailFromSpringSession();
         ReadProjectService.DirectoryDto dto = readProjectService.readProjectDirectory(id, email);
         String username = readProjectService.getUsername(email);
         List<ReadProjectService.Node> node = dto.getNodes();
@@ -77,7 +76,7 @@ public class ProjectController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
-        String email = jwtUtils.getEmailFromSpringSession();
+        String email = JwtUtils.getEmailFromSpringSession();
         projectService.deleteProject(id, email);
         return ResponseEntity.ok().build();
     }
@@ -86,7 +85,7 @@ public class ProjectController {
     public ResponseEntity<?> inviteProject(
             @PathVariable Long id,
             @RequestBody InviteRequest request) {
-        String inviterEmail = jwtUtils.getEmailFromSpringSession();
+        String inviterEmail = JwtUtils.getEmailFromSpringSession();
         String inviteeEmail = request.getEmail();
         try {
             projectService.inviteMemberToProject(id, inviterEmail, inviteeEmail);
@@ -97,11 +96,11 @@ public class ProjectController {
     }
 
     @DeleteMapping("/{id}/members/{memberId}")
-    public ResponseEntity<?> removeProjectMember (
+    public ResponseEntity<?> removeProjectMember(
             @PathVariable Long id,
             @PathVariable Long memberId
-    ){
-        String email = jwtUtils.getEmailFromSpringSession();
+    ) {
+        String email = JwtUtils.getEmailFromSpringSession();
         try {
             projectService.removeMemberToProject(id, memberId, email);
             return ResponseEntity.ok().build();
