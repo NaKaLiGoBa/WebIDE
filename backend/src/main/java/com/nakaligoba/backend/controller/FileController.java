@@ -1,12 +1,12 @@
 package com.nakaligoba.backend.controller;
 
 import com.nakaligoba.backend.service.FileService;
+import com.nakaligoba.backend.service.FileService.CreateFileDto;
+import com.nakaligoba.backend.service.FileService.FileDto;
 import com.nakaligoba.backend.service.RunFileService;
 import com.nakaligoba.backend.utils.JwtUtils;
-import io.jsonwebtoken.Jwt;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import com.nakaligoba.backend.service.FileService.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.ws.rs.Path;
 import java.util.NoSuchElementException;
 
 @Slf4j
@@ -27,7 +26,6 @@ public class FileController {
 
     private final FileService fileService;
     private final RunFileService runFileService;
-    private final JwtUtils jwtUtils;
 
     @GetMapping("/{fileId}")
     public ResponseEntity<FileDto> readFile(
@@ -45,7 +43,7 @@ public class FileController {
         Authentication authentication = SecurityContextHolder.getContext()
                 .getAuthentication();
         String username = authentication.getName();
-        String email = jwtUtils.getEmailFromSpringSession();
+        String email = JwtUtils.getEmailFromSpringSession();
         String[] split = request.getName().split("\\.");
         CreateFileDto dto = CreateFileDto.builder()
                 .fileName(split[0])
